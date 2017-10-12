@@ -1,0 +1,305 @@
+import Tkinter as tk
+import matplotlib.pyplot as plt
+from tkFileDialog import askopenfilename
+class DemoMain:
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.infoLabel = tk.Label(self.frame, text = "Select Plot",width= 30, justify = "right")
+        self.infoLabel1 = tk.Label(self.frame, text = " ",width= 30, justify = "right")
+        self.infoLabel2 = tk.Label(self.frame, text = " ",width= 30, justify = "right")
+        self.infoLabel3 = tk.Label(self.frame, text = " ",width= 30, justify = "right")
+        self.buttonPie = tk.Button(self.frame, text = 'Pie', width = 20, command = self.new_windowPie)
+        self.buttonLine = tk.Button(self.frame, text = 'Line', width = 20, command = self.new_windowLine)
+        self.buttonDot = tk.Button(self.frame, text = 'Dot', width = 20, command = self.new_windowDot)
+        self.buttonBar = tk.Button(self.frame, text = 'Bar', width = 20, command = self.new_windowBar)
+        self.buttonDFF = tk.Button(self.frame, text = 'Dot(FromFile)', width = 20, command = self.new_DotFile)
+        self.buttonHFF = tk.Button(self.frame, text = 'Histogram(FromFile)', width = 20, command = self.new_Histogram)
+        self.infoLabel.grid(row=0, column= 0)
+        self.infoLabel2.grid(row=0,column = 1)
+        self.buttonPie.grid(row = 1, column = 0)
+        self.buttonLine.grid(row = 1, column = 1)
+        self.infoLabel1.grid(row=2,column = 1)
+        self.buttonDot.grid(row = 3, column = 1)
+        self.buttonBar.grid(row = 3, column = 0)
+        self.buttonHFF.grid(row =4, column = 0)
+        self.buttonDFF.grid(row = 4, column = 1)
+        self.infoLabel3.grid(row=5,column = 1)
+        self.frame.pack()
+    def new_windowPie(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = DemoPie(self.newWindow)
+    def new_windowDot(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = DemoDot(self.newWindow)
+    def new_windowLine(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = DemoLine(self.newWindow)
+    def new_windowBar(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = DemoBar(self.newWindow)
+    def new_DotFile(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = DemoDFF(self.newWindow)
+    def new_Histogram(self):
+        self.newWindow = tk.Toplevel(self.master)
+        self.app = DemoHFF(self.newWindow)
+
+class DemoPie:
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        #textbox
+        self.dataEntry = tk.Entry(self.frame,textvariable=1,width = 70)
+        self.labelEntry =tk.Entry(self.frame,textvariable=2,width = 70)
+        self.colorEntry = tk.Entry(self.frame,textvariable=3,width = 70)
+        #button
+        self.Ok_button = tk.Button(self.frame, text="OK", command=self.ok_button)
+        self.Reset_button = tk.Button(self.frame, text="Reset", command=self.reset_button)
+        self.Hide_button= tk.Button(self.frame, wraplength=180, justify="left", text="Input Sample                   protion:30,30,30,10   label:A,B,C,D  color:red,yellow,blue,black     (click to hide)", command=self.hide_button)
+        #label
+        self.dataLabet = tk.Label(self.frame, text = "portion",justify = "right")
+        self.labelLabet = tk.Label(self.frame, text = "label",justify = "right")
+        self.colorLabet = tk.Label(self.frame, text = "color",justify = "right")
+        self.infoLabel = tk.Label(self.frame, text = "Split Your Input By Comma",justify = "right")
+        #assign layout
+        
+        self.infoLabel.grid(row = 0,column = 1)
+        self.dataLabet.grid(row = 1,column = 0)
+        self.labelLabet.grid(row = 2,column = 0)
+        self.colorLabet.grid(row = 3,column = 0)
+        self.labelEntry.grid(row = 2,column = 1)
+        self.dataEntry.grid(row =1,column = 1)
+        self.colorEntry.grid(row =3,column = 1)
+        self.Hide_button.grid(row = 4, column =1)
+        self.Ok_button.grid(row = 5,column = 2)
+        self.Reset_button.grid(row = 6,column = 2)
+        self.Quit_button = tk.Button(self.frame, text="Quit", command=self.quit_button,justify="right")
+        self.Quit_button.grid(row = 7,column = 2)
+        self.frame.pack()
+    def ok_button(self):
+        rawInputData = self.dataEntry.get()
+        dataArray = rawInputData.split(",")        
+        rawInputLabel = self.labelEntry.get()
+        labelArray = rawInputLabel.split(",")        
+        rawInputColor = self.colorEntry.get()
+        colorArray = rawInputColor.split(",")
+        plt.pie(dataArray, labels=labelArray,colors=colorArray, autopct='%1.1f%%')
+        plt.axis('equal')
+        plt.show()
+    def reset_button(self):
+        self.dataEntry.delete(0,"end")
+        self.colorEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+    def quit_button(self):
+        self.dataEntry.delete(0,"end")
+        self.colorEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+        self.master.destroy()
+    def hide_button(self):
+        self.Hide_button.grid_forget()
+
+class DemoBar:
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.dataEntry = tk.Entry(self.frame,textvariable=1,width = 70)
+        self.labelEntry =tk.Entry(self.frame,textvariable=2,width = 70)
+        self.colorEntry = tk.Entry(self.frame,textvariable=3,width = 70)
+        self.Ok_button = tk.Button(self.frame, text="OK", command=self.ok_button)
+        self.Reset_button = tk.Button(self.frame, text="Reset", command=self.reset_button)
+        self.dataLabet = tk.Label(self.frame, text = "data",justify = "right")
+        self.labelLabet = tk.Label(self.frame, text = "label",justify = "right")
+        self.colorLabet = tk.Label(self.frame, text = "color",justify = "right")
+        self.infoLabel = tk.Label(self.frame, text = "Split Your Input By Comma",justify = "right")
+        self.Hide_button= tk.Button(self.frame, wraplength=180, justify="left", text="Input Sample                   data:30,30,30,10   label:A,B,C,D  color:red,yellow,blue,black     (click to hide)", command=self.hide_button)
+        self.infoLabel.grid(row = 0,column = 1)
+        self.dataLabet.grid(row = 1,column = 0)
+        self.labelLabet.grid(row = 2,column = 0)
+        self.colorLabet.grid(row = 3,column = 0)
+        self.labelEntry.grid(row = 2,column = 1)
+        self.dataEntry.grid(row =1,column = 1)
+        self.colorEntry.grid(row =3,column = 1)
+        self.Hide_button.grid(row = 4, column =1)
+        self.Ok_button.grid(row = 5,column = 2)
+        self.Reset_button.grid(row = 6,column = 2)
+        self.Quit_button = tk.Button(self.frame, text="Quit", command=self.quit_button,justify="right")
+        self.Quit_button.grid(row = 7,column = 2)
+        self.frame.pack()
+    def ok_button(self):
+        rawInputData = self.dataEntry.get()
+        dataArray = rawInputData.split(",")
+        
+        rawInputLabel = self.labelEntry.get()
+        labelArray = rawInputLabel.split(",")
+        
+        rawInputColor = self.colorEntry.get()
+        colorArray = rawInputColor.split(",")
+        list1 = range(0,len(dataArray))
+        plt.bar(list1, dataArray, 1.0 ,color = colorArray)
+        plt.xticks(list1,labelArray)
+        plt.show()
+    def reset_button(self):
+        self.dataEntry.delete(0,"end")
+        self.colorEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+    def quit_button(self):
+        self.dataEntry.delete(0,"end")
+        self.colorEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+        self.master.destroy()
+    def hide_button(self):
+        self.Hide_button.grid_forget()
+        
+        
+class DemoLine:
+        #in this class labelEntry means Y entry
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.dataEntry = tk.Entry(self.frame,textvariable=1,width = 70)
+        self.labelEntry =tk.Entry(self.frame,textvariable=2,width = 70)
+        self.colorEntry = tk.Entry(self.frame,textvariable=3,width = 70)
+        self.Ok_button = tk.Button(self.frame, text="OK", command=self.ok_button)
+        self.Reset_button = tk.Button(self.frame, text="Reset", command=self.reset_button)
+        self.dataLabet = tk.Label(self.frame, text = "X",justify = "right")
+        self.labelLabet = tk.Label(self.frame, text = "Y",justify = "right")
+        self.colorLabet = tk.Label(self.frame, text = "color",justify = "right")
+        self.infoLabel = tk.Label(self.frame, text = "Split Your Input By Comma",justify = "right")
+        self.Hide_button= tk.Button(self.frame, wraplength=180, justify="left", text="Input Sample                   X:10,20,30,40          Y:10,20,10,20                color:red                             (click to hide)", command=self.hide_button)
+        self.infoLabel.grid(row = 0,column = 1)
+        self.dataLabet.grid(row = 1,column = 0)
+        self.labelLabet.grid(row = 2,column = 0)
+        self.colorLabet.grid(row = 3,column = 0)
+        self.labelEntry.grid(row = 2,column = 1)
+        self.dataEntry.grid(row =1,column = 1)
+        self.colorEntry.grid(row =3,column = 1)
+        self.Hide_button.grid(row = 4, column =1)
+        self.Ok_button.grid(row = 5,column = 2)
+        self.Reset_button.grid(row = 6,column = 2)
+        self.Quit_button = tk.Button(self.frame, text="Quit", command=self.quit_button,justify="right")
+        self.Quit_button.grid(row = 7,column = 2)
+
+        self.frame.pack()
+    def ok_button(self):
+        rawInputData = self.dataEntry.get()
+        dataArray = rawInputData.split(",")
+        
+        rawInputLabel = self.labelEntry.get()
+        labelArray = rawInputLabel.split(",")
+        
+        rawInputColor = self.colorEntry.get()
+        plt.plot(dataArray, labelArray,color=rawInputColor)
+        plt.show()
+    def reset_button(self):
+        self.dataEntry.delete(0,"end")
+        self.colorEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+    def quit_button(self):
+        self.dataEntry.delete(0,"end")
+        self.colorEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+        self.master.destroy()
+    def hide_button(self):
+        self.Hide_button.grid_forget()
+        
+        
+class DemoDot:
+    #in this class labelEntry means Y entry
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.dataEntry = tk.Entry(self.frame,textvariable=1,width = 70)
+        self.labelEntry =tk.Entry(self.frame,textvariable=2,width = 70)
+        self.Ok_button = tk.Button(self.frame, text="OK", command=self.ok_button,justify="right")
+        self.Reset_button = tk.Button(self.frame, text="Reset", command=self.reset_button,justify="right")
+        self.dataLabet = tk.Label(self.frame, text = "X",justify = "right")
+        self.labelLabet = tk.Label(self.frame, text = "Y",justify = "right")
+        self.infoLabel = tk.Label(self.frame, text = "Split Your Input By Comma",justify = "right")
+        self.Hide_button= tk.Button(self.frame, wraplength=180, justify="left", text="Input Sample                   X:10,20,30,40,50,60,70,80   Y:10,20,10,20,10,10,10,10                             (click to hide)", command=self.hide_button)
+        self.infoLabel.grid(row = 0,column = 1)
+        self.dataLabet.grid(row = 1,column = 0)
+        self.labelLabet.grid(row = 2,column = 0)
+        self.labelEntry.grid(row = 2,column = 1)
+        self.dataEntry.grid(row =1,column = 1)
+        self.Hide_button.grid(row = 3, column =1)
+        self.Ok_button.grid(row = 4,column = 2)
+        self.Reset_button.grid(row = 5,column = 2)
+        self.Quit_button = tk.Button(self.frame, text="Quit", command=self.quit_button,justify="right")
+        self.Quit_button.grid(row = 6,column = 2)
+        self.frame.pack()
+    def ok_button(self):
+        rawInputData = self.dataEntry.get()
+        dataArray = rawInputData.split(",")
+        
+        rawInputLabel = self.labelEntry.get()
+        labelArray = rawInputLabel.split(",")
+
+        plt.scatter(dataArray, labelArray)
+        plt.show()
+    def reset_button(self):
+        self.dataEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+    def quit_button(self):
+        self.dataEntry.delete(0,"end")
+        self.labelEntry.delete(0,"end")
+        self.master.destroy()
+    def hide_button(self):
+        self.Hide_button.grid_forget()
+        
+        
+class DemoDFF:
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.filename = askopenfilename()
+
+        self.Ok_button = tk.Button(self.frame, text="OK", command=self.ok_button,justify="right")
+        with open(self.filename, "r") as self.myfile:
+            self.data=self.myfile.read().replace('\n',',')
+        self.Ok_button.pack()
+        self.fixData = []
+        self.rawData = self.data.split(',')
+        for item in self.rawData:
+            self.fixData.append(float(item))
+        self.fixDataX = self.fixData[::2]
+        self.fixDataY = self.fixData[1::2]
+        
+        self.frame.pack()
+    def ok_button(self):
+        #print self.fixDataX
+        #print self.fixDataY
+        plt.scatter(self.fixDataX, self.fixDataY)
+        plt.show()
+
+class DemoHFF:
+    def __init__(self, master):
+        self.master = master
+        self.frame = tk.Frame(self.master)
+        self.filename = askopenfilename()
+
+        self.Ok_button = tk.Button(self.frame, text="OK", command=self.ok_button,justify="right")
+        with open(self.filename, "r") as self.myfile:
+            self.data=self.myfile.read().replace('\n',',')
+        self.Ok_button.pack()
+        self.fixData = []
+        self.rawData = self.data.split(',')
+        for item in self.rawData:
+            self.fixData.append(float(item))
+        
+        self.frame.pack()
+    def ok_button(self):
+        fig, ax = plt.subplots()
+        N, bins, patches = ax.hist(self.fixData, 20)
+        plt.show()
+
+
+
+def main(): 
+    root = tk.Tk()
+    root.title("Plotter V0.1 XG")
+    app = DemoMain(root)
+    root.mainloop()
+
+if __name__ == '__main__':
+    main()
